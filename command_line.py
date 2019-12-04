@@ -123,30 +123,6 @@ def main():
     )
 
     args = parser.parse_args()
-    print(args.m_type)
-    print(args.exome)
-    print(type(args.exome))
-
-
-    # input_file = os.environ.get('INPUT_FILE')
-    # output_dir = os.environ.get('OUTPUT_DIR')
-    # input_file_type = os.environ.get('INPUT_FILE_TYPE')
-    # ref = os.environ.get('REF_GENOME')
-    # core = int(os.environ.get('CPU'))
-    # min_sig = int(os.environ.get('MINUM_SIG'))
-    # process = int(os.environ.get('NUMBER_OF_SIGNATURE'))
-    # iteration = int(os.environ.get('ITERATION'))
-    # hie = os.environ.get('HIERARCHY')
-    # m_type = os.environ.get('MTYPE').split(',')
-    # exome = os.environ.get('EXOME')
-
-    # if m_type is None:
-    #     m_type = ["default"]
-    # hie = string_to_bool(hie)
-    # exome = string_to_bool(exome)
-    # print(
-    #     input_file, output_dir, ref, input_file_type, core, min_sig, process, iteration, hie, m_type, exome
-    # )
     sig.sigProfilerExtractor(args.input_file_type, args.output_dir, args.input_file, refgen=args.ref, startProcess=args.min_sig,
                              endProcess=args.process, totalIterations=args.iteration, cpu=args.core, hierarchy=args.hie,
                              mtype=args.m_type, exome=args.exome)
@@ -157,4 +133,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
