@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import argparse
 from sigproextractor import sigpro as sig
-
-
-def string_to_bool(input_string):
-    return False if input_string.lower() == "false" else True
 
 
 def main():
@@ -29,7 +26,7 @@ def main():
     parser.add_argument(
         '-o', '--output',
         dest='output_dir',
-        action='append',
+        action='store',
         type=str,
         required=True,
         help='Directory for storing results'
@@ -95,8 +92,8 @@ def main():
     parser.add_argument(
         '-m', '--mutation_type',
         dest='m_type',
-        action='store',
-        type=int,
+        action='append',
+        type=str,
         required=False,
         help='To indicate the type of signatures',
         # default=False

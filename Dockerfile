@@ -12,8 +12,8 @@ RUN echo "deb http://ftp.de.debian.org/debian stretch main contrib" >> /etc/apt/
     && apt-get -y install msttcorefonts \
     && pip install --upgrade pip \
     && pip3 install -r requirements.txt \
-	&& chmod +x install_ref.py setup.py\
-    && ./install_ref.py \
+	&& chmod +x ./build/install_ref.py setup.py \
+    && ./build/install_ref.py \
     && ./setup.py develop 
     # && chown -R $USER:$USER .
-CMD ["ls"]
+CMD ["/bin/bash"]
