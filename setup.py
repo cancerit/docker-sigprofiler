@@ -4,15 +4,18 @@ from setuptools import setup
 
 setup (
     name = 'docker-sigprofiler', 
-    description = 'a implementation for sigprofiler docker CI', 
+    description = 'Code for creating SigProfiler docker images', 
     author = 'Jingwei Wang', 
-    url = 'www.example.com', 
-    author_email = 'jw32@sanger.ac.uk', 
+    url = 'https://github.com/cancerit/docker-sigprofiler', 
+    author_email = 'cgphelp@sanger.ac.uk', 
     version = '0.1.0', 
     python_requires = '>= 3.6', 
     packages = ['docker_sigprofiler'], 
     install_requires = [
-        ''
+        'Sigproextractor==0.0.5.77',
+        'SigprofilerPlotting==1.0.10',
+        'SigprofilerMatrixGenerator==1.0.21',
+        'xlrd'
     ], 
     entry_points={
         'console_scripts': [

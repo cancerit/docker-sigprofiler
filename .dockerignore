@@ -1,0 +1,10 @@
+__pycache__/
+sp_demo.egg-info
+/LICENCE
+/INSTALL
+/CHANGES.md
+/.gitignore
+/.git
+/.travis.yml
+/env
+/dist
