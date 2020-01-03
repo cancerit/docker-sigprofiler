@@ -50,7 +50,7 @@ def main():
         '-c', '--cpu',
         dest='core',
         type=int,
-        default=-1
+        default=-1,
         help='Number of CPU cores to use, -1 for all available CPUs'
     )
 
