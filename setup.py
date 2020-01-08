@@ -10,7 +10,7 @@ setup (
     author = 'Jingwei Wang', 
     url = 'https://github.com/cancerit/docker-sigprofiler', 
     author_email = 'cgphelp@sanger.ac.uk', 
-    license='AGPL',
+    license='agpl-3.0',
     version = docker_sigprofiler.version, 
     python_requires = '>= 3.6', 
     packages = ['docker_sigprofiler'], 
