@@ -11,4 +11,4 @@ script:
 - echo 'Build and check docker image'
 - docker build -t sigprofiler-travis .
 - docker images | grep -c sigprofiler-travis
-- docker run -t --rm sigprofiler-travis docker-sigprofiler -h
+- docker run -t --rm sigprofiler-travis docker-sigprofiler --version

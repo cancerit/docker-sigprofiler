@@ -7,14 +7,12 @@ ENV NEWUSER=cgp \
     HOME=/opt/cgp
 WORKDIR $HOME/build_dir
 COPY . .
-RUN useradd --shell /bin/bash -g 0 $NEWUSER \
-    && echo "deb http://ftp.de.debian.org/debian stretch main contrib" >> /etc/apt/sources.list \
+RUN echo "deb http://ftp.de.debian.org/debian stretch main contrib" >> /etc/apt/sources.list \
     && apt-get update \
-    && apt-get -y install msttcorefonts \
-	&& chmod +x ./build/install_ref.py setup.py \
-    && ./setup.py develop \
-    && ln -s /usr/local/lib/python3.7/site-packages/SigProfilerMatrixGenerator-1.0.21-py3.7.egg/SigProfilerMatrixGenerator/references/ \
-    $HOME/references
+    && apt-get -y install msttcorefonts
+RUN useradd --shell /bin/bash -g 0 $NEWUSER 
+RUN chmod +x setup.py \
+    && ./setup.py develop
 WORKDIR $HOME
 USER $NEWUSER
 CMD ["/bin/bash"]
