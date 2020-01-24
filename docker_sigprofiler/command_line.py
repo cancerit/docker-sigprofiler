@@ -3,7 +3,8 @@
 import os
 import sys
 import argparse
-from sigproextractor import sigpro
+sys.path.insert(0, '/opt/cgp/new_lib/')
+from SigProfilerExtractor import sigpro
 from . import version
 
 
@@ -50,9 +51,9 @@ def main():
     parser.add_argument(
         '-r', '--reference',
         dest='ref',
-        type=str.lower,
+        type=str,
         required=True,
-        choices=['grch37', 'grch38', 'c_elegans', 'dog', 'mm9', 'mm10', 'rn6'],
+        choices=['GRCh37', 'GRCh38', 'c_elegans', 'dog', 'mm9', 'mm10', 'rn6'],
         help='name of reference genome'
     )
 
@@ -85,23 +86,23 @@ def main():
         dest='iteration',
         type=int,
         default=1000,
-        help='number of iterations for extracting signatures, default is 1000.'
+        help='number of iterations for extracting signatures, default is 1000'
     )
 
     parser.add_argument(
         '-m', '--mutation_type',
         dest='m_type',
-        action='append',
+        required=True,
         type=str,
-        default=['96', 'DINUC'],
-        help='to indicate the type of signatures',
+        help='to indicate the type of signatures, eg. SBS96,DBS78'
     )
 
     parser.add_argument(
-        '--hierarchy',
-        dest='hie',
-        action='store_true',
-        help='to flag if hierarchy is expected in the data'
+        '--init',
+        dest='init',
+        type=str,
+        default='alexandrov-lab-custom',
+        help='init method'
     )
 
     parser.add_argument(
@@ -111,14 +112,22 @@ def main():
         help='to flag exome data'
     )
 
+    parser.add_argument(
+        '--gpu',
+        dest='gpu',
+        action='store_true',
+        help='to use GPU'
+    )
+
     args = parser.parse_args()
-    sigpro.sigProfilerExtractor(args.input_file_type, args.output_dir, args.input_file, refgen=args.ref, startProcess=args.min_sig,
-                             endProcess=args.process, totalIterations=args.iteration, cpu=args.core, hierarchy=args.hie,
-                             mtype=args.m_type, exome=args.exome)
+    sigpro.sigProfilerExtractor(args.input_file_type, args.output_dir, args.input_file, refgen=args.ref, genome_build=args.ref, startProcess=args.min_sig,
+                             endProcess=args.process, totalIterations=args.iteration, init=args.init, cpu=args.core, mtype=args.m_type, 
+                             exome=args.exome, penalty=0.05, resample=True, wall=False, gpu=args.gpu)
     print('''
     ========================
     = Extraction finished! =
     ========================''')
+
 
 if __name__ == "__main__":
     main()
