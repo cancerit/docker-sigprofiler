@@ -1,4 +1,4 @@
-FROM python:3.6.8
+FROM python:3.7.3
 LABEL maintainer="cgphelp@sanger.ac.uk" \
       uk.ac.sanger.cgp="Cancer, Ageing and Somatic Mutation, Wellcome Sanger Institute" \
       version="0.1.1" \
