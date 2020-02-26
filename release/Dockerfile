@@ -1,4 +1,4 @@
-FROM jw32/sigprofiler-docker:0.16-base
+FROM jw32/sigprofiler-docker:0.17-base
 ARG REF
 WORKDIR /usr/home
 COPY genome_install.py .

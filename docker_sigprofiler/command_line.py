@@ -44,7 +44,7 @@ def main():
         dest='input_file_type',
         type=str.lower,
         choices=['table', 'csv', 'vcf', 'mat'],
-        required=True,
+        default='vcf',
         help='input files format'
     )
 
@@ -69,15 +69,16 @@ def main():
         '-ms', '--minimum_sig',
         dest='min_sig',
         type=int,
-        help='the minimum number of signatures to start with',
-        default=1
+        default=1,
+        help='the minimum number of signatures to start with'
     )
 
     parser.add_argument(
         '-ts', '--total_sig',
         dest='process',
         type=int,
-        required=True,
+        # required=True,
+        default=5,
         help='the total number of signatures to end with',
     )
 
@@ -92,8 +93,8 @@ def main():
     parser.add_argument(
         '-m', '--mutation_type',
         dest='m_type',
-        required=True,
         type=str,
+        default='SBS96',
         help='to indicate the type of signatures, eg. SBS96,DBS78'
     )
 
@@ -102,6 +103,7 @@ def main():
         dest='init',
         type=str,
         default='alexandrov-lab-custom',
+        choices=['alexandrov-lab-custom', 'nndsvda'],
         help='init method'
     )
 
