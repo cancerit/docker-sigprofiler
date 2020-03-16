@@ -100,7 +100,7 @@ def importdata(datatype="matrix"):
     return data
 
 
-def sigProfilerExtractor(input_type, out_put, input_data, refgen="GRCh37", genome_build = 'GRCh37', startProcess=1, endProcess=10, totalIterations=100, init="alexandrov-lab-custom", cpu=-1,  mtype = "default",exome = False, penalty=0.05, resample = True, wall= False, gpu=False): 
+def sigProfilerExtractor(input_type, out_put, input_data, refgen="GRCh37", genome_build = 'GRCh37', startProcess=1, endProcess=10, totalIterations=100, init="alexandrov-lab-custom", cpu=-1,  mtype = "default",exome = False, penalty=0.05, resample = True, wall= False, batch_size=1, gpu=False): 
     memory_usage()
     """
     Extracts mutational signatures from an array of samples.
@@ -130,17 +130,24 @@ def sigProfilerExtractor(input_type, out_put, input_data, refgen="GRCh37", genom
     
     wall: A Boolean. If true, the Ws and Hs from all the NMF iterations are generated in the output. 
             
-    cpu: An integer, optional. The number of processors to be used to extract the signatures. The default value is -1 which will use all available processors. 
+    cpu: An integer, optional. The number of processors to be used to extract the signatures. The default value is -1 which will use all available        processors. 
     
     mtype: A list of strings, optional. The items in the list defines the mutational contexts to be considered to extract the signatures. The default value is ["96", "DINUC" , "ID"], where "96" is the SBS96 context, "DINUC"
     is the DINULEOTIDE context and ID is INDEL context. 
             
     exome: Boolean, optional. Defines if the exomes will be extracted. The default value is "False".
     
-    penalty: Float, optional. Takes any positive float. Default is 0.05. Defines the thresh-hold cutoff to asaign signatures to a sample.    
+    penalty: Float, optional. Takes any positive float. Default is 0.05. Defines the thresh-hold cutoff to be assigned signatures to a sample.    
     
     resample: Boolean, optional. Default is True. If True, add poisson noise to samples by resampling.  
     
+    gpu:Boolean, optional. Defines if the GPU resource will used if available. Default is False. If True, the GPU resource 
+        will be used in the computation.
+
+    batch_size: An integer. Will be effective only if the GPU is used. Defines the number of NMF replicates to be performed
+              by each CPU during the parallel processing. Default is 1.
+
+
     
     Returns
     -------
@@ -515,7 +522,7 @@ def sigProfilerExtractor(input_type, out_put, input_data, refgen="GRCh37", genom
                                                 seeds=seeds, 
                                                 init = init,
                                                 normalization_cutoff=normalization_cutoff,
-                                                gpu=gpu, batch_size=128)
+                                                gpu=gpu, batch_size=batch_size)
             
             
             
@@ -690,46 +697,60 @@ def sigProfilerExtractor(input_type, out_put, input_data, refgen="GRCh37", genom
                        allcolnames, process_std_error = processSTE, signature_stabilities = signature_stabilities, \
                        signature_total_mutations = signature_total_mutations, signature_stats = signature_stats, penalty=penalty)    
           
-        try:
-            # create the folder for the final solution/ Decomposed Solution
-            
-            layer_directory2 = output+"/Suggested_Solution/Decomposed_Solution"
-            try:
-                if not os.path.exists(layer_directory2):
-                    os.makedirs(layer_directory2)
-            except: 
-                print ("The {} folder could not be created".format("output"))
+        #try:
+        # create the folder for the final solution/ Decomposed Solution
         
-            if processAvg.shape[0]==1536: #collapse the 1596 context into 96 only for the deocmposition 
-                processAvg = pd.DataFrame(processAvg, index=index)
-                processAvg = processAvg.groupby(processAvg.index.str[1:8]).sum()
-                genomes = pd.DataFrame(genomes, index=index)
-                genomes = genomes.groupby(genomes.index.str[1:8]).sum()
-                index = genomes.index
-                processAvg = np.array(processAvg)
-                genomes = np.array(genomes)
-                
-           
-            final_signatures = sub.signature_decomposition(processAvg, m, layer_directory2, genome_build=genome_build, mutation_context=mutation_context)
+        layer_directory2 = output+"/Suggested_Solution/Decomposed_Solution"
+        try:
+            if not os.path.exists(layer_directory2):
+                os.makedirs(layer_directory2)
+        except: 
+            print ("The {} folder could not be created".format("output"))
+    
+        if processAvg.shape[0]==1536: #collapse the 1596 context into 96 only for the deocmposition 
+            processAvg = pd.DataFrame(processAvg, index=index)
+            processAvg = processAvg.groupby(processAvg.index.str[1:8]).sum()
+            genomes = pd.DataFrame(genomes, index=index)
+            genomes = genomes.groupby(genomes.index.str[1:8]).sum()
+            index = genomes.index
+            processAvg = np.array(processAvg)
+            genomes = np.array(genomes)
             
-            # extract the global signatures and new signatures from the final_signatures dictionary
-            globalsigs = final_signatures["globalsigs"]
-            globalsigs = np.array(globalsigs)
-            newsigs = final_signatures["newsigs"]
-            processAvg = np.hstack([globalsigs, newsigs])  
-            allsigids = final_signatures["globalsigids"]+final_signatures["newsigids"]
-            attribution = final_signatures["dictionary"]
-            background_sigs= final_signatures["background_sigs"]
-            genomes = pd.DataFrame(genomes)
+       
+        final_signatures = sub.signature_decomposition(processAvg, m, layer_directory2, genome_build=genome_build, mutation_context=mutation_context)
+        
+        # extract the global signatures and new signatures from the final_signatures dictionary
+        globalsigs = final_signatures["globalsigs"]
+        globalsigs = np.array(globalsigs)
+        newsigs = final_signatures["newsigs"]
+        processAvg = np.hstack([globalsigs, newsigs])  
+        allsigids = final_signatures["globalsigids"]+final_signatures["newsigids"]
+        attribution = final_signatures["dictionary"]
+        background_sigs= final_signatures["background_sigs"]
+        genomes = pd.DataFrame(genomes)
+        
+        
+        
+        exposureAvg = sub.make_final_solution(processAvg, genomes, allsigids, layer_directory2, m, index, colnames, \
+                                remove_sigs=True, attribution = attribution, denovo_exposureAvg  = exposureAvg , background_sigs=background_sigs, penalty=penalty, genome_build=genome_build)
+        
+        """#make the decomposition plots
+        if m=="SBS96" or m=="96":
+            from SigProfilerExtractor import SPEDecomposition_SBS96 as decomp
+            #decomp.gen_decomposition(out_put)
+        elif m=="SBS1536" or m=="1536":
+            from SigProfilerExtractor import SPEDecomposition_SBS1536 as decomp
+        elif m=="DBS78" or m=="78":
+            from SigProfilerExtractor import SPEDecomposition_DBS78 as decomp
+        elif m=="ID83" or m=="83":
+            from SigProfilerExtractor import SPEDecomposition_DBS78 as decomp
+        else:
+            pass"""
+     
             
-            
-            
-            exposureAvg = sub.make_final_solution(processAvg, genomes, allsigids, layer_directory2, m, index, colnames, \
-                                    remove_sigs=True, attribution = attribution, denovo_exposureAvg  = exposureAvg , background_sigs=background_sigs, penalty=penalty, genome_build=genome_build)
-            
-        except:
-            print("\nWARNING!!! We apolozize we don't have a global signature database for the mutational context you provided. We have a database only for SBS96, DINUC and INDELS.\nTherefore no result for signature Decomposition is generated." )
-            shutil.rmtree(layer_directory2)
+        #except:
+            #print("\nWARNING!!! We apolozize we don't have a global signature database for the mutational context you provided. We have a database only for SBS96, DINUC and INDELS.\nTherefore no result for signature Decomposition is generated." )
+            #shutil.rmtree(layer_directory2)
                 
             
            

@@ -2,7 +2,7 @@
 FROM python:3.7.3
 LABEL maintainer="cgphelp@sanger.ac.uk" \
       uk.ac.sanger.cgp="Cancer, Ageing and Somatic Mutation, Wellcome Sanger Institute" \
-      version="0.1.1" \
+      version="0.18.0" \
       description="SigProfiler docker"
 # ENV NEWUSER=cgp \
 #     HOME=/opt/cgp \
@@ -13,7 +13,7 @@ RUN echo "deb http://ftp.de.debian.org/debian stretch main contrib" >> /etc/apt/
     && apt-get update \
     && apt-get -y install msttcorefonts \
     && pip install --upgrade pip \
-    && pip install pip-release/SigProfilerExtractor-1.0.5
+    && pip install pip-release/SigProfilerExtractor-1.0.6
 # RUN useradd --shell /bin/bash -g 0 $NEWUSER \
 #     && chown -R $NEWUSER $HOME 
 RUN chmod +x setup.py \

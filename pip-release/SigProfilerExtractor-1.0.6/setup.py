@@ -6,7 +6,7 @@ import os
 if os.path.exists("dist"):
     shutil.rmtree("dist")
 
-VERSION = '1.0.5'
+VERSION = '1.0.6'
 
 
 with open('README.md') as f:
@@ -49,6 +49,7 @@ setup(name='SigProfilerExtractor',
           'statsmodels>=0.9.0',
           'scikit-learn>=0.22',
 	  'psutil>=5.6.1',
+          'reportlab>=3.5.34',
       'xlrd>=1.0.0'
            ],
       include_package_data=True,      
