@@ -15,10 +15,7 @@ setup (
     python_requires = '>= 3.6', 
     packages = ['docker_sigprofiler'], 
     install_requires = [
-        'Sigproextractor==0.0.5.77',
-        'SigprofilerPlotting==1.0.10',
-        'SigprofilerMatrixGenerator==1.0.21',
-        'xlrd'
+        # 'SigProfilerExtractor==1.0.5'
     ], 
     entry_points={
         'console_scripts': [
