@@ -2,7 +2,7 @@ notifications:
     slack: 
         rooms:
             - wtsi-cgpit:ABlfGMqViryJ0JIhJuaWeXDa
-            - stsi-cgpit:QwjLpRAbITtat8sj1XWtpY8L
+            - wtsi-cgpit:QwjLpRAbITtat8sj1XWtpY8L
 
 sudo: false
 
