@@ -1,4 +1,4 @@
 #### to build an image with the corresponding reference genome
 
-`docker build --build-arg REF=mm10 -t jw32/sigprofiler-docker:0.16-mm10 -f Dockerfile .`
+`docker build --build-arg REF={REFERENCE_GENOME} -t jw32/sigprofiler-docker:{BASE_IMAGE_VERSION}-{REFERENCE_GENOME} -f Dockerfile .`
 
