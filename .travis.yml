@@ -1,5 +1,8 @@
 notifications:
-    slack: wtsi-cgpit:ABlfGMqViryJ0JIhJuaWeXDa
+    slack: 
+        rooms:
+            - wtsi-cgpit:ABlfGMqViryJ0JIhJuaWeXDa
+            - stsi-cgpit:QwjLpRAbITtat8sj1XWtpY8L
 
 sudo: false
 
