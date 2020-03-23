@@ -43,7 +43,7 @@ def main():
         '-it', '--input_type',
         dest='input_file_type',
         type=str.lower,
-        choices=['table', 'csv', 'vcf', 'mat'],
+        choices=['table', 'text', 'csv', 'matrix', 'vcf', 'matobj'],
         default='vcf',
         help='input files format'
     )
