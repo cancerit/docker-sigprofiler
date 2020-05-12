@@ -1,0 +1,10 @@
+__pycache__/
+docker_sigprofiler.egg-info
+/LICENCE
+/INSTALL
+/CHANGES.md
+/.gitignore
+/.git
+/.travis.yml
+/env
+/dist

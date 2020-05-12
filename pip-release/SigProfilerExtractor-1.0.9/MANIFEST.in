@@ -1,0 +1,3 @@
+include README.rst
+include SigProfilerExtractor/data/*
+include SigProfilerExtractor/data/vcftest/*
