@@ -2,7 +2,7 @@
 FROM python:3.7.3
 LABEL maintainer="cgphelp@sanger.ac.uk" \
       uk.ac.sanger.cgp="Cancer, Ageing and Somatic Mutation, Wellcome Sanger Institute" \
-      version="0.18.1" \
+      version="1.0.0" \
       description="SigProfiler docker"
 # ENV NEWUSER=cgp \
 #     HOME=/opt/cgp \
