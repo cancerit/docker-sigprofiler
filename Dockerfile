@@ -13,7 +13,7 @@ RUN echo "deb http://ftp.de.debian.org/debian stretch main contrib" >> /etc/apt/
     && apt-get update \
     && apt-get -y install msttcorefonts \
     && pip install --upgrade pip \
-    && pip install pip-release/SigProfilerExtractor-1.0.6
+    && pip install pip-release/SigProfilerExtractor-1.0.9
 # RUN useradd --shell /bin/bash -g 0 $NEWUSER \
 #     && chown -R $NEWUSER $HOME 
 RUN chmod +x setup.py \
