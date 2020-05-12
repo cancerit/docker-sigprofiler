@@ -75,7 +75,7 @@ def main():
 
     parser.add_argument(
         '-ts', '--total_sig',
-        dest='process',
+        dest='maximum_signatures',
         type=int,
         # required=True,
         default=5,
@@ -84,15 +84,15 @@ def main():
 
     parser.add_argument(
         '-n', '--iteration',
-        dest='iteration',
+        dest='nmf_replicates',
         type=int,
-        default=1000,
-        help='number of iterations for extracting signatures, default is 1000'
+        default=250,
+        help='number of iterations for extracting signatures, default is 250'
     )
 
     parser.add_argument(
-        '-m', '--mutation_type',
-        dest='m_type',
+        '-ct', '--context_type',
+        dest='context_type',
         type=str,
         default='SBS96',
         help='to indicate the type of signatures, eg. SBS96,DBS78'
@@ -100,7 +100,7 @@ def main():
 
     parser.add_argument(
         '--init',
-        dest='init',
+        dest='nmf_init',
         type=str,
         default='alexandrov-lab-custom',
         choices=['alexandrov-lab-custom', 'nndsvda'],
@@ -121,10 +121,113 @@ def main():
         help='to use GPU'
     )
 
+    parser.add_argument(
+        '--batch_size',
+        dest='batch_size',
+        type=int,
+        default=1,
+        help='to define bath size for running on GPU'
+    )
+
+    parser.add_argument(
+        '--precision',
+        dest='precision',
+        type=str,
+        default='single',
+        help='to define precision'
+    )
+
+    parser.add_argument(
+        '-mn','--matrix_normalization',
+        dest='matrix_normalization',
+        type=str,
+        default='100X',
+        help='to define times of matrix normalization'
+    )
+
+    parser.add_argument(
+        '--seeds',
+        dest='seeds',
+        type=str,
+        default='random',
+        help='to define the seed for each NMF process, can be "random" or a "seed file"'
+    )
+
+    parser.add_argument(
+        '--min_nmf_iterations',
+        dest='min_nmf_iterations',
+        type=int,
+        default=10000,
+        help='to define minimum number of NMF iterations'
+    )
+
+    parser.add_argument(
+        '--max_nmf_iterations',
+        dest='max_nmf_iterations',
+        type=int,
+        default=1000000,
+        help='to define maximum number of NMF iterations'
+    )
+
+    parser.add_argument(
+        '--nmf_test_conv',
+        dest='nmf_test_conv',
+        type=int,
+        default=10000,
+        help='to define NMF test converge'
+    )
+
+    parser.add_argument(
+        '--nmf_tolerance',
+        dest='nmf_tolerance',
+        type=float,
+        default=1e-15,
+        help='NMF tolerance threshold'
+    )
+
+    parser.add_argument(
+        '--get_all_signature_matrices',
+        dest='get_all_signature_matrices',
+        action='store_true',
+        help='to flag get_all_signature_matrices as true'
+    )
+
+    parser.add_argument(
+        '--nnls_penalty',
+        dest='nnls_penalty',
+        type=float,
+        default=0.05,
+        help='to define NNLS penalty threshold'
+    )
+
+
     args = parser.parse_args()
-    sigpro.sigProfilerExtractor(args.input_file_type, args.output_dir, args.input_file, refgen=args.ref, genome_build=args.ref, startProcess=args.min_sig,
-                             endProcess=args.process, totalIterations=args.iteration, init=args.init, cpu=args.core, mtype=args.m_type, 
-                             exome=args.exome, penalty=0.05, resample=True, wall=False, gpu=args.gpu)
+    sigpro.sigProfilerExtractor(
+        args.input_file_type, 
+        args.output_dir, 
+        args.input_file, 
+        reference_genome=args.ref, 
+        opportunity_genome=args.ref, 
+        minimum_signatures=args.min_sig,
+        maximum_signatures=args.maximum_signatures, 
+        nmf_replicates=args.nmf_replicates, 
+        nmf_init=args.nmf_init, 
+        cpu=args.core, 
+        context_type=args.context_type, 
+        exome=args.exome, 
+        nnls_penalty=args.nnls_penalty,
+        resample=True, 
+        gpu=args.gpu,
+        batch_size=args.batch_size,
+        precision=args.precision,
+        matrix_normalization=args.matrix_normalization,
+        seeds=args.seeds,
+        min_nmf_iterations=args.min_nmf_iterations,
+        max_nmf_iterations=args.max_nmf_iterations,
+        nmf_test_conv=args.nmf_test_conv,
+        nmf_tolerance=args.nmf_tolerance,
+        get_all_signature_matrices=args.get_all_signature_matrices
+        )
     print('''
     ========================
     = Extraction finished! =
