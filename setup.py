@@ -20,6 +20,7 @@ setup (
     entry_points={
         'console_scripts': [
             'docker-sigprofiler=docker_sigprofiler.command_line:main',
+            'matrixGenerator=docker_sigprofiler.matrixGenerator_CLI:main',
         ],
     },
 )

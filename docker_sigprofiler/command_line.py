@@ -3,7 +3,6 @@
 import os
 import sys
 import argparse
-sys.path.insert(0, '/opt/cgp/new_lib/')
 from SigProfilerExtractor import sigpro
 from . import version
 
